@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/product.dart';
+import '../screens/product_detail_screen.dart';
 import '../widgets/product_item.dart';
 
 class ProductsOverviewScreen extends StatelessWidget {
@@ -53,10 +54,20 @@ class ProductsOverviewScreen extends StatelessWidget {
               childAspectRatio: 3 / 2,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10),
-          itemBuilder: (ctx, index) => ProductItem(
-                id: loadedProduct[index].id,
-                title: loadedProduct[index].title,
-                imageUrl: loadedProduct[index].imageUrl,
+          itemBuilder: (ctx, index) => GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (ctx) =>
+                          ProductDetailScreen(),
+                    ),
+                  );
+                },
+                child: ProductItem(
+                  id: loadedProduct[index].id,
+                  title: loadedProduct[index].title,
+                  imageUrl: loadedProduct[index].imageUrl,
+                ),
               )),
     );
   }
