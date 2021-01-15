@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (ctx)=> Products(),
       child: MaterialApp(
-        title: 'MyShop',
+        title: 'MyShop', 
         theme: ThemeData(
             primarySwatch: Colors.purple,
             accentColor: Colors.deepOrange,
