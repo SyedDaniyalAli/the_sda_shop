@@ -47,7 +47,8 @@ class Cart with ChangeNotifier {
               id: existingCartItem.id,
               title: existingCartItem.title,
               quantity: existingCartItem.quantity + 1,
-              price: existingCartItem.price));
+              price: existingCartItem.price,
+              productId: existingCartItem.productId));
     } else {
       _items.putIfAbsent(
         productId,
@@ -55,7 +56,8 @@ class Cart with ChangeNotifier {
             id: DateTime.now().toString(),
             title: title,
             quantity: 1,
-            price: price),
+            price: price,
+            productId: productId),
       );
     }
     notifyListeners();
