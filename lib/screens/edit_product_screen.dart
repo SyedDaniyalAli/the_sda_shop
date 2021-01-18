@@ -139,7 +139,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       imageUrl: '',
                       description: '',
                       price: 0.0,
-                      isFavorite: false);
+                      isFavorite: _editedProduct.isFavorite);
                 },
                 validator: (value) {
                   if (value.isEmpty) {
@@ -164,7 +164,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       imageUrl: '',
                       description: '',
                       price: double.parse(value),
-                      isFavorite: false);
+                      isFavorite: _editedProduct.isFavorite);
                 },
                 validator: (value) {
                   if (value.isEmpty) {
@@ -201,7 +201,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       imageUrl: '',
                       description: value,
                       price: _editedProduct.price,
-                      isFavorite: false);
+                      isFavorite: _editedProduct.isFavorite);
                 },
               ),
               Row(
@@ -251,7 +251,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                             imageUrl: value,
                             description: _editedProduct.description,
                             price: _editedProduct.price,
-                            isFavorite: false);
+                            isFavorite: _editedProduct.isFavorite);
                       },
                       onFieldSubmitted: (_) => _saveFormData(),
                     ),
