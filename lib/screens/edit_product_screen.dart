@@ -18,17 +18,56 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _imageUrlFocusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
   var _editedProduct = Product(
-      id: DateTime.now().toString(),
+      id: null,
       title: '',
       imageUrl: '',
       description: '',
       price: 0.0,
       isFavorite: false);
 
+  var _initValues = {
+    'title': '',
+    'imageUrl': '',
+    'description': '',
+    'price': '',
+  };
+
+  var _isInit = true;
+
   @override
   void initState() {
     _imageUrlFocusNode.addListener(_updateImageURl);
+    //it doesn't work here, because it do not load before build method run
+    // final String id = ModalRoute.of(context).settings.arguments;
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // it runs before build method run
+    if (_isInit) {
+      final String productId =
+      ModalRoute
+          .of(context)
+          .settings
+          .arguments as String;
+
+      if (productId != null) {
+        _editedProduct =
+            Provider.of<Products>(context, listen: false).findById(productId);
+
+        _initValues = {
+          'title': _editedProduct.title,
+          'imageUrl':'',
+          'description': _editedProduct.description,
+          'price': _editedProduct.price.toString(),
+        };
+        _imageUrlController.text=_editedProduct.imageUrl;
+      }
+    }
+
+    _isInit = false;
+    super.didChangeDependencies();
   }
 
   @override
@@ -44,7 +83,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   void _updateImageURl() {
     if (!_imageUrlFocusNode.hasFocus) {
       if ((!_imageUrlController.text.startsWith('http') &&
-              !_imageUrlController.text.startsWith('https')) ||
+          !_imageUrlController.text.startsWith('https')) ||
           (!_imageUrlController.text.endsWith('jpg') &&
               !_imageUrlController.text.endsWith('jpeg') &&
               !_imageUrlController.text.endsWith('.png'))) {
@@ -55,12 +94,19 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   void _saveFormData() {
+
     final _isValid = _formKey.currentState.validate();
     if (!_isValid) {
       return;
     }
     _formKey.currentState.save();
-    Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
+    if(_editedProduct.id==null)
+      {
+        Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
+      }
+    else{
+      Provider.of<Products>(context, listen: false).updateProduct(_editedProduct);
+    }
     Navigator.of(context).pop();
   }
 
@@ -80,6 +126,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
           child: ListView(
             children: [
               TextFormField(
+                initialValue: _initValues['title'],
                 decoration: InputDecoration(labelText: 'Title'),
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (_) {
@@ -102,6 +149,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 },
               ),
               TextFormField(
+                initialValue: _initValues['price'],
                 decoration: InputDecoration(labelText: 'Price'),
                 keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.next,
@@ -132,6 +180,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 },
               ),
               TextFormField(
+                initialValue: _initValues['description'],
                 decoration: InputDecoration(labelText: 'Description'),
                 keyboardType: TextInputType.multiline,
                 maxLines: 3,
@@ -167,12 +216,14 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     child: _imageUrlController.text.isEmpty
                         ? Text('Enter a Url')
                         : FittedBox(
-                            child: Image.network(_imageUrlController.text),
-                            fit: BoxFit.contain,
-                          ),
+                      child: Image.network(_imageUrlController.text),
+                      fit: BoxFit.contain,
+                    ),
                   ),
                   Expanded(
                     child: TextFormField(
+                      //It's wrong because we can't use both initialValue and controller at same time
+                      // initialValue: _initValues['imageUrl'],
                       decoration: InputDecoration(labelText: 'ImageUrl'),
                       keyboardType: TextInputType.url,
                       textInputAction: TextInputAction.done,
