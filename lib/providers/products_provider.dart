@@ -80,7 +80,7 @@ class Products with ChangeNotifier {
           price: product.price,
           imageUrl: product.imageUrl));
       notifyListeners();
-    });
+    }).catchError((errorMessage) => throw errorMessage);
   }
 
   void updateProduct(Product product) {
