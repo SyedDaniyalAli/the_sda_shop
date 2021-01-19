@@ -94,7 +94,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
     }
   }
 
-  void _saveFormData() {
+// Submit all Data~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Future<void> _saveFormData() async {
     //Show progress
     setState(() {
       _isLoading = true;
@@ -105,33 +106,32 @@ class _EditProductScreenState extends State<EditProductScreen> {
       return;
     }
     _formKey.currentState.save();
-    if (_editedProduct.id == null) {
-      Provider.of<Products>(context, listen: false)
-          .addProduct(_editedProduct)
-          .then((_) => Navigator.of(context).pop())
 
-          .catchError(
-            (errorMessage) =>
-            showDialog(
-              context: context,
-              builder: (ctx) =>
-                  AlertDialog(
-                    title: Text('An error occurred!'),
-                    content: Text(errorMessage.toString()),
-                    actions: [
-                      FlatButton(
-                          onPressed: () => Navigator.of(ctx).pop(),
-                          child: Text('Okay'))
-                    ],
-                  ),
-            ),
-      ).then(
-            (_) =>
+    if (_editedProduct.id == null) {
+      try {
+        await Provider.of<Products>(context, listen: false)
+            .addProduct(_editedProduct);
+      } catch (exceptionMessage) {
+        await showDialog(
+          context: context,
+          builder: (ctx) =>
+              AlertDialog(
+                title: Text('Something went wrong!'),
+                content: Text(exceptionMessage.toString()),
+                actions: [
+                  FlatButton(
+                      onPressed: () => Navigator.of(ctx).pop(),
+                      child: Text('Okay'))
+                ],
+              ),
+        );
+      } finally {
         //Hide progress
         setState(() {
           _isLoading = false;
-        }),
-      );
+        });
+        Navigator.of(context).pop();
+      }
     } else {
       Provider.of<Products>(context, listen: false)
           .updateProduct(_editedProduct);
@@ -143,6 +143,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     }
   }
 
+  // Main Widget~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   @override
   Widget build(BuildContext context) {
     return Scaffold(
