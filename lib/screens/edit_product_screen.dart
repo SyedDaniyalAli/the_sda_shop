@@ -107,7 +107,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
     }
     _formKey.currentState.save();
 
-    if (_editedProduct.id == null) {
+    if (_editedProduct.id != null) {
+      await Provider.of<Products>(context, listen: false)
+          .updateProduct(_editedProduct);
+    } else {
       try {
         await Provider.of<Products>(context, listen: false)
             .addProduct(_editedProduct);
@@ -125,22 +128,20 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 ],
               ),
         );
-      } finally {
-        //Hide progress
-        setState(() {
-          _isLoading = false;
-        });
-        Navigator.of(context).pop();
       }
-    } else {
-      Provider.of<Products>(context, listen: false)
-          .updateProduct(_editedProduct);
-      Navigator.of(context).pop();
-      //Hide progress
-      setState(() {
-        _isLoading = false;
-      });
+      // finally {
+      //   //Hide progress
+      //   setState(() {
+      //     _isLoading = false;
+      //   });
+      //   Navigator.of(context).pop();
+      // }
     }
+    Navigator.of(context).pop();
+    //Hide progress
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   // Main Widget~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

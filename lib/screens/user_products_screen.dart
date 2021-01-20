@@ -9,6 +9,12 @@ import '../widgets/user_products_item.dart';
 class UserProductsScreen extends StatelessWidget {
   static const routeName = './user_product_screen';
 
+  Future<void> _refreshProducts(BuildContext context) async
+  {
+    await Provider.of<Products>(context, listen: false).fetchAndSetProduct();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final productsData = Provider.of<Products>(context);
@@ -24,24 +30,30 @@ class UserProductsScreen extends StatelessWidget {
         ],
       ),
       drawer: AppDrawer(),
-      body: Padding(
-        padding: const EdgeInsets.all(8),
-        child: ListView.builder(
-            itemCount: productsData.items.length,
-            itemBuilder: (ctx, index) => Column(
-                  children: [
-                    UserProductsItem(
-                      id: productsData.items[index].id,
-                      title: productsData.items[index].title,
-                      imageUrl: productsData.items[index].imageUrl,
-                    ),
-                    Divider(),
-                  ],
-                )),
+      body: RefreshIndicator(
+        onRefresh:()=> _refreshProducts(context),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: ListView.builder(
+              itemCount: productsData.items.length,
+              itemBuilder: (ctx, index) =>
+                  Column(
+                    children: [
+                      UserProductsItem(
+                        id: productsData.items[index].id,
+                        title: productsData.items[index].title,
+                        imageUrl: productsData.items[index].imageUrl,
+                      ),
+                      Divider(),
+                    ],
+                  )),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
-        child:Icon(Icons.add),
+        backgroundColor: Theme
+            .of(context)
+            .primaryColor,
+        child: Icon(Icons.add),
         onPressed: () {
           Navigator.of(context).pushNamed(EditProductScreen.routeName);
         },

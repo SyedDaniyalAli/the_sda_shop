@@ -15,6 +15,7 @@ class UserProductsItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _scaffoldContext = ScaffoldMessenger.of(context);
     return ListTile(
       title: Text(title),
       leading: CircleAvatar(
@@ -38,7 +39,14 @@ class UserProductsItem extends StatelessWidget {
               icon: Icon(
                 Icons.delete,
               ),
-              onPressed: () {
+              onPressed: () async {
+                try {
+                  await Provider.of<Products>(context).deleteProduct(id);
+                } catch (exceptionMessage) {
+                  _scaffoldContext.showSnackBar(
+                      SnackBar(content: Text('Deleting Failed!', textAlign: TextAlign.center,)));
+                }
+
                 showDialog(
                   context: context,
                   builder: (ctx) => AlertDialog(
@@ -49,7 +57,8 @@ class UserProductsItem extends StatelessWidget {
                         child: Text('No'),
                         onPressed: () {
                           ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          Toast.show('Product is Safe', context, duration: 2, gravity: Toast.CENTER);
+                          Toast.show('Product is Safe', context,
+                              duration: 2, gravity: Toast.CENTER);
                           Navigator.of(context).pop();
                         },
                       ),
