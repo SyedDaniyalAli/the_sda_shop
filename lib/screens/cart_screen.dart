@@ -5,12 +5,26 @@ import 'package:the_shop/providers/orders.dart';
 import '../providers/cart.dart' show Cart;
 import '../widgets/cart_item.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   static const routeName = '/cart';
+
+  @override
+  _CartScreenState createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  var _isItemInCart = false;
 
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<Cart>(context);
+    if (cart.itemCount > 0) {
+      // print(totalItems.countOrders());
+      setState(() {
+        _isItemInCart = true;
+
+      });
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text('Your Cart'),
@@ -40,15 +54,18 @@ class CartScreen extends StatelessWidget {
                     ),
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
-                  FlatButton(
-                    onPressed: () {
-                      Provider.of<Orders>(context, listen: false).addOrder(
-                          cart.items.values.toList(), cart.totalAmount);
-                      cart.clear();
-                    },
-                    child: Text(
-                      'OrderNow',
-                      style: TextStyle(color: Theme.of(context).primaryColor),
+                  Visibility(
+                    visible: _isItemInCart,
+                    child: FlatButton(
+                      onPressed: () {
+                        Provider.of<Orders>(context, listen: false).addOrder(
+                            cart.items.values.toList(), cart.totalAmount);
+                        cart.clear();
+                      },
+                      child: Text(
+                        'OrderNow',
+                        style: TextStyle(color: Theme.of(context).primaryColor),
+                      ),
                     ),
                   ),
                 ],
