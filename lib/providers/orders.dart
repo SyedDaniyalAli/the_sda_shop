@@ -26,30 +26,35 @@ class Orders with ChangeNotifier {
   }
 
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {
-    const String url =
-        "https://theshopappbysda-default-rtdb.firebaseio.com/orders.json";
+    const url =
+        'https://theshopappbysda-default-rtdb.firebaseio.com/orders.json';
+    final timestamp = DateTime.now();
     try {
       //do it
-      final response = await http.post(url,
-          body: json.encode({
-            'amount': total,
-            'product': cartProducts.map((product) => {
-                  'productId': product.productId,
-                  'price': product.price,
-                  'title': product.title,
-                  'quantity': product.quantity,
-                }),
-            'dateTime': DateTime.now().toString(),
-          }));
+      final response = await http.post(
+        url,
+        body: json.encode({
+          'amount': total,
+          'product': cartProducts
+              .map((product) => {
+                    'productId': product.productId,
+                    'price': product.price,
+                    'title': product.title,
+                    'quantity': product.quantity,
+                  })
+              .toList(),
+          'dateTime': timestamp.toIso8601String(),
+        }),
+      );
 
       //then do that
       _orders.insert(
         0,
         OrderItem(
-          id: response.body,
+          id: json.decode(response.body)['name'],
           amount: total,
           product: cartProducts,
-          dateTime: DateTime.now(),
+          dateTime: timestamp,
         ),
       );
       notifyListeners();
