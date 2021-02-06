@@ -52,7 +52,7 @@ class Products with ChangeNotifier {
         return;
       }
       url =
-          'https://theshopappbysda-default-rtdb.firebaseio.com/userFavorites/$userId?auth=$authToken';
+      'https://theshopappbysda-default-rtdb.firebaseio.com/userFavorites/$userId?auth=$authToken';
 
       final favoriteResponse = await http.get(url);
       final favoriteData = json.decode(favoriteResponse.body);
@@ -65,7 +65,7 @@ class Products with ChangeNotifier {
           description: productData['description'],
           price: productData['price'],
           isFavorite:
-              favoriteData == null ? false : favoriteData[productId] ?? false,
+          favoriteData == null ? false : favoriteData[productId] ?? false,
           imageUrl: productData['imageUrl'],
         ));
       });
@@ -114,7 +114,7 @@ class Products with ChangeNotifier {
   //Update Product~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   Future<void> updateProduct(Product product) async {
     final productIndex =
-        _items.indexWhere((currentIndex) => product.id == currentIndex.id);
+    _items.indexWhere((currentIndex) => product.id == currentIndex.id);
 
     if (productIndex >= 0) {
       final url =
