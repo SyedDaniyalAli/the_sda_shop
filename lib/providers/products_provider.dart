@@ -7,6 +7,11 @@ import 'package:the_shop/models/http_exception.dart';
 import 'product.dart';
 
 class Products with ChangeNotifier {
+  final String authToken;
+  final String userId;
+
+  Products(this.authToken, this._items, this.userId);
+
   List<Product> _items = [
     // Product(
     //   id: 'p1',
@@ -37,14 +42,21 @@ class Products with ChangeNotifier {
 
   //fetch and load product
   Future<void> fetchAndSetProduct() async {
-    const url =
-        'https://theshopappbysda-default-rtdb.firebaseio.com/products.json';
+    var url =
+        'https://theshopappbysda-default-rtdb.firebaseio.com/products.json?auth=$authToken';
+
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       if (extractedData == null) {
         return;
       }
+      url =
+          'https://theshopappbysda-default-rtdb.firebaseio.com/userFavorites/$userId?auth=$authToken';
+
+      final favoriteResponse = await http.get(url);
+      final favoriteData = json.decode(favoriteResponse.body);
+
       final List<Product> loadedProducts = [];
       extractedData.forEach((productId, productData) {
         loadedProducts.add(Product(
@@ -52,7 +64,8 @@ class Products with ChangeNotifier {
           title: productData['title'],
           description: productData['description'],
           price: productData['price'],
-          isFavorite: productData['isFavorite'],
+          isFavorite:
+              favoriteData == null ? false : favoriteData[productId] ?? false,
           imageUrl: productData['imageUrl'],
         ));
       });
@@ -66,8 +79,8 @@ class Products with ChangeNotifier {
 
   //Add Product~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   Future<void> addProduct(Product product) async {
-    const url =
-        'https://theshopappbysda-default-rtdb.firebaseio.com/products.json';
+    final url =
+        'https://theshopappbysda-default-rtdb.firebaseio.com/products.json?auth=$authToken';
 
     try {
       //do it
@@ -105,7 +118,7 @@ class Products with ChangeNotifier {
 
     if (productIndex >= 0) {
       final url =
-          'https://theshopappbysda-default-rtdb.firebaseio.com/products/${product.id}.json';
+          'https://theshopappbysda-default-rtdb.firebaseio.com/products/${product.id}.json?auth=$authToken';
       await http.patch(url,
           body: jsonEncode({
             'title': product.title,
@@ -124,7 +137,7 @@ class Products with ChangeNotifier {
   Future<void> deleteProduct(String id) async {
     // _items.removeWhere((productId) => productId.id == id); it will directly remove the product
     final url =
-        'https://theshopappbysda-default-rtdb.firebaseio.com/products/$id.json';
+        'https://theshopappbysda-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken';
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
     var existingProduct = _items[existingProductIndex];
 
