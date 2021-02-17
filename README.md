@@ -1,6 +1,6 @@
 # the_shop
 
-Brand new shop application made on flutter
+Brand new shop application made on flutter (framework)
 
 ## Getting Started
 
