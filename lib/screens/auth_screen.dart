@@ -95,6 +95,9 @@ class AuthCard extends StatefulWidget {
   _AuthCardState createState() => _AuthCardState();
 }
 
+// This mixin Provide functionality to the animation controller (in vsync
+// argument of AnimationController and it also let our widget know
+// when a frame update is due to animation need that information to play smoothly)
 class _AuthCardState extends State<AuthCard>
     with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
@@ -106,18 +109,24 @@ class _AuthCardState extends State<AuthCard>
 
   var _isLoading = false;
   final _passwordController = TextEditingController();
+
+  //Setting Height for animation~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   AnimationController _controller;
   Animation<Size> _heightAnimation;
 
   @override
   void initState() {
     super.initState();
+
+    //Controlling animation~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     _controller = AnimationController(
       vsync: this,
       duration: Duration(
         milliseconds: 300,
       ),
     );
+
+    //Tween animation allows animate between two objects
     _heightAnimation = Tween<Size>(
             begin: Size(double.infinity, 260), end: Size(double.infinity, 320))
         .animate(
