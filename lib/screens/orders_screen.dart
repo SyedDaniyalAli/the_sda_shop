@@ -69,9 +69,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   return Center(child: CircularProgressIndicator());
                 }
                 if (dataSnapshot.error != null) {
+                  print(dataSnapshot.error.toString());
                   return Center(
                     child: Text('An error occurred!'),
                   );
+
                 } else {
                   return Consumer<Orders>(
                       builder: (context, orderData, child) => ListView.builder(
