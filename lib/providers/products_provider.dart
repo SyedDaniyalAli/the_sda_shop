@@ -67,7 +67,7 @@ class Products with ChangeNotifier {
           description: productData['description'],
           price: productData['price'],
           isFavorite:
-              favoriteData == null ? false : favoriteData['productId'] ?? false,
+              favoriteData == null ? false : favoriteData['productId'] ?? false, // Special ternary operator by Flutter
           imageUrl: productData['imageUrl'],
         ));
       });

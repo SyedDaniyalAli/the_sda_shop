@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,6 +13,7 @@ import './screens/product_detail_screen.dart';
 import './screens/products_overview_screen.dart';
 import './screens/user_products_screen.dart';
 import 'screens/auth_screen.dart';
+import './helpers/custom_route.dart';
 
 void main() => runApp(MyApp());
 
@@ -46,7 +48,14 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
               primarySwatch: Colors.purple,
               accentColor: Colors.deepOrange,
-              fontFamily: 'Lato'),
+              fontFamily: 'Lato',
+              // Custom Route Transitions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+              pageTransitionsTheme: PageTransitionsTheme(
+                builders: {
+                  TargetPlatform.android: CustomPageTransitionsBuilder(),
+                  TargetPlatform.iOS: CustomPageTransitionsBuilder(),
+                },
+              )),
           // home: ProductsOverviewScreen(),
           routes: {
             '/': (ctx) => auth.isAuth ? ProductsOverviewScreen() : AuthScreen(),
