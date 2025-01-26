@@ -12,7 +12,8 @@ class ProductDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final productId = ModalRoute.of(context).settings.arguments as String;
+    final productId =
+        (ModalRoute.of(context)?.settings.arguments ?? '') as String;
     final loadedProduct =
         Provider.of<Products>(context, listen: false).findById(productId);
     return Scaffold(
@@ -37,14 +38,12 @@ class ProductDetailScreen extends StatelessWidget {
               SizedBox(
                 height: 10,
               ),
-              Text(
-                'Rs.${loadedProduct.price}',
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 20,
-                ),
-                textAlign: TextAlign.center
-              ),
+              Text('Rs.${loadedProduct.price}',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 20,
+                  ),
+                  textAlign: TextAlign.center),
               SizedBox(
                 height: 10,
               ),

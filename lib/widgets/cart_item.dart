@@ -10,16 +10,21 @@ class CartItem extends StatelessWidget {
   final String title;
   final int quantity;
 
-  const CartItem(
-      {Key key, this.id, this.price, this.title, this.quantity, this.productId})
-      : super(key: key);
+  const CartItem({
+    required Key key,
+    required this.id,
+    required this.price,
+    required this.title,
+    required this.quantity,
+    required this.productId,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Dismissible(
       key: ValueKey(id),
       background: Container(
-        color: Theme.of(context).errorColor,
+        color: Theme.of(context).colorScheme.error,
         child: Icon(
           Icons.delete,
           color: Colors.white,
@@ -43,13 +48,13 @@ class CartItem extends StatelessWidget {
             title: Text('Are you Sure?'),
             content: Text('Do you want to remove this item from cart?'),
             actions: [
-              FlatButton(
+              TextButton(
                 onPressed: () {
                   Navigator.of(context).pop(false);
                 },
                 child: Text('No'),
               ),
-              FlatButton(
+              TextButton(
                 onPressed: () {
                   Navigator.of(context).pop(true);
                 },

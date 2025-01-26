@@ -12,10 +12,10 @@ class OrderItem {
   final DateTime dateTime;
 
   OrderItem(
-      {@required this.id,
-      @required this.amount,
-      @required this.product,
-      @required this.dateTime});
+      {required this.id,
+      required this.amount,
+      required this.product,
+      required this.dateTime});
 }
 
 class Orders with ChangeNotifier {
@@ -23,7 +23,7 @@ class Orders with ChangeNotifier {
   final String authToken;
   final String userId;
 
-  Orders(this.authToken,this.userId, this._orders);
+  Orders(this.authToken, this.userId, this._orders);
 
   List<OrderItem> get orders {
     return [..._orders];
@@ -32,12 +32,9 @@ class Orders with ChangeNotifier {
   Future<void> fetchAndSetOrders() async {
     final url =
         'https://theshopappbysda-default-rtdb.firebaseio.com/orders/$userId.json?auth=$authToken';
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     final List<OrderItem> loadedOrders = [];
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
-    if (extractedData == null) {
-      return;
-    }
     extractedData.forEach((orderId, orderData) {
       loadedOrders.add(
         OrderItem(
@@ -68,7 +65,7 @@ class Orders with ChangeNotifier {
     try {
       //do it
       final response = await http.post(
-        url,
+        Uri.parse(url),
         body: json.encode({
           'amount': total,
           'products': cartProducts

@@ -10,7 +10,11 @@ class UserProductsItem extends StatelessWidget {
   final String title;
   final String imageUrl;
 
-  const UserProductsItem({Key key, this.title, this.imageUrl, this.id})
+  const UserProductsItem(
+      {required Key key,
+      required this.title,
+      required this.imageUrl,
+      required this.id})
       : super(key: key);
 
   @override
@@ -43,8 +47,11 @@ class UserProductsItem extends StatelessWidget {
                 try {
                   await Provider.of<Products>(context).deleteProduct(id);
                 } catch (exceptionMessage) {
-                  _scaffoldContext.showSnackBar(
-                      SnackBar(content: Text('Deleting Failed!', textAlign: TextAlign.center,)));
+                  _scaffoldContext.showSnackBar(SnackBar(
+                      content: Text(
+                    'Deleting Failed!',
+                    textAlign: TextAlign.center,
+                  )));
                 }
 
                 showDialog(
@@ -53,16 +60,16 @@ class UserProductsItem extends StatelessWidget {
                     title: Text('Are you sure?'),
                     content: Text('Do you want to delete this product?'),
                     actions: [
-                      FlatButton(
+                      TextButton(
                         child: Text('No'),
                         onPressed: () {
                           ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          Toast.show('Product is Safe', context,
-                              duration: 2, gravity: Toast.CENTER);
+                          Toast.show('Product is Safe',
+                              duration: 2, gravity: Toast.center);
                           Navigator.of(context).pop();
                         },
                       ),
-                      FlatButton(
+                      TextButton(
                         child: Text('Yes'),
                         onPressed: () {
                           Provider.of<Products>(
@@ -82,7 +89,7 @@ class UserProductsItem extends StatelessWidget {
                   ),
                 );
               },
-              color: Theme.of(context).errorColor,
+              color: Theme.of(context).colorScheme.error,
             ),
           ],
         ),

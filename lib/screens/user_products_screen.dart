@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import './edit_product_screen.dart';
 import '../providers/products_provider.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/user_products_item.dart';
+import './edit_product_screen.dart';
 
 class UserProductsScreen extends StatefulWidget {
   static const routeName = './user_product_screen';
@@ -54,6 +54,7 @@ class _UserProductsScreenState extends State<UserProductsScreen> {
                                   id: productsData.items[index].id,
                                   title: productsData.items[index].title,
                                   imageUrl: productsData.items[index].imageUrl,
+                                  key: ValueKey(productsData.items[index].id),
                                 ),
                                 Divider(),
                               ],

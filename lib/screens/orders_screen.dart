@@ -40,7 +40,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
   // }
 
   //If You have multiple future then
-  Future _ordersFuture;
+  late Future _ordersFuture;
 
   Future _obtainOrdersFuture() {
     return Provider.of<Orders>(context, listen: false).fetchAndSetOrders();
@@ -73,7 +73,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   return Center(
                     child: Text('An error occurred!'),
                   );
-
                 } else {
                   return Consumer<Orders>(
                       builder: (context, orderData, child) => ListView.builder(

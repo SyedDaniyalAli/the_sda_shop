@@ -48,15 +48,12 @@ class Products with ChangeNotifier {
         'https://theshopappbysda-default-rtdb.firebaseio.com/products.json?auth=$authToken&$filterString';
 
     try {
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
-      if (extractedData == null) {
-        return;
-      }
       url =
           'https://theshopappbysda-default-rtdb.firebaseio.com/userFavorites/$userId.json?auth=$authToken';
 
-      final favoriteResponse = await http.get(url);
+      final favoriteResponse = await http.get(Uri.parse(url));
       final favoriteData = json.decode(favoriteResponse.body);
 
       final List<Product> loadedProducts = [];
@@ -66,8 +63,10 @@ class Products with ChangeNotifier {
           title: productData['title'],
           description: productData['description'],
           price: productData['price'],
-          isFavorite:
-              favoriteData == null ? false : favoriteData['productId'] ?? false, // Special ternary operator by Flutter
+          isFavorite: favoriteData == null
+              ? false
+              : favoriteData['productId'] ??
+                  false, // Special ternary operator by Flutter
           imageUrl: productData['imageUrl'],
         ));
       });
@@ -87,7 +86,7 @@ class Products with ChangeNotifier {
     try {
       //do it
       final response = await http.post(
-        url,
+        Uri.parse(url),
         body: json.encode({
           'title': product.title,
           'description': product.description,
@@ -122,7 +121,7 @@ class Products with ChangeNotifier {
     if (productIndex >= 0) {
       final url =
           'https://theshopappbysda-default-rtdb.firebaseio.com/products/${product.id}.json?auth=$authToken';
-      await http.patch(url,
+      await http.patch(Uri.parse(url),
           body: jsonEncode({
             'title': product.title,
             'description': product.description,
@@ -148,13 +147,19 @@ class Products with ChangeNotifier {
     _items.removeAt(existingProductIndex);
     notifyListeners();
 
-    final response = await http.delete(url);
+    final response = await http.delete(Uri.parse(url));
     if (response.statusCode >= 400) {
       //added back if there is an error
       _items.insert(existingProductIndex, existingProduct);
       notifyListeners();
       throw HttpException('Could not delete product');
     }
-    existingProduct = null;
+    existingProduct = Product(
+      id: '',
+      title: '',
+      description: '',
+      price: 0.0,
+      imageUrl: '',
+    );
   }
 }

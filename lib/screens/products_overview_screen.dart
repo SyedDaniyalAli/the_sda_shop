@@ -5,7 +5,7 @@ import '../providers/cart.dart';
 import '../providers/products_provider.dart';
 import '../screens/cart_screen.dart';
 import '../widgets/app_drawer.dart';
-import '../widgets/badge.dart';
+import '../widgets/badge.dart' as customBadge;
 import '../widgets/products_grid.dart';
 
 enum FilterOptions { Favorites, All }
@@ -80,9 +80,12 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
             ],
           ),
           Consumer<Cart>(
-            builder: (_, cart, childWhichIsOnlyBuildOneTime) => Badge(
-              child: childWhichIsOnlyBuildOneTime,
+            builder: (_, cart, childWhichIsOnlyBuildOneTime) =>
+                customBadge.Badge(
+              child: childWhichIsOnlyBuildOneTime ?? Icon(Icons.shopping_cart),
               value: cart.itemCount.toString(),
+              key: ValueKey('value'),
+              color: Colors.red,
             ),
             child: IconButton(
               icon: Icon(Icons.shopping_cart),
